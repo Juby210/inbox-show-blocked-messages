@@ -8,16 +8,18 @@ module.exports = class InboxShowBlockedMessages extends Plugin {
         const BlockedMessages = await getModule(m => m.type && m.type.displayName == 'BlockedMessages')
         const UnreadChannelMessages = await getModule(m => m.default && m.default.displayName == 'UnreadChannelMessages')
         inject('inbox-show-blocked-messages', UnreadChannelMessages, 'default', ([{ channel }], res) => {
-            for (let i = 0; i < res.props.children.length; i++) {
+            let j = res.props.children.length
+            for (let i = 0; i < j; i++) {
                 const m = res.props.children[i], msg = channel.messages.find(msg => msg.id == m.key)
                 if (!msg || !msg.blocked) continue
                 if (i > 0) {
-                    const j = res.props.children[i - 1].props.__group !== undefined ? res.props.children[i - 1].props.__group : i - 1
-                    const e = findInReactTree(res.props.children[j], e => e.type && e.type.type && e.type.type.displayName == 'BlockedMessages')
+                    const e = findInReactTree(res.props.children[i - 1], e => e.type && e.type.type && e.type.type.displayName == 'BlockedMessages')
                     if (e) {
                         const { content } = e.props.messages
                         content.push({ content: msg, groupId: content[content.length - 1].content.author.id == msg.author.id ? null : msg.id, type: 'MESSAGE' })
-                        res.props.children[i] = React.createElement(() => null, { __group: j })
+                        res.props.children.splice(i, 1)
+                        i--
+                        j--
                         continue
                     }
                 }
