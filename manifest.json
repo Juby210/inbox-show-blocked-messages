@@ -2,6 +2,6 @@
     "name": "Inbox Show Blocked Messages",
     "description": "Stacks blocked messages & shows button to show blocked messages in inbox.",
     "author": "Juby210#0577",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "license": "MIT"
 }
